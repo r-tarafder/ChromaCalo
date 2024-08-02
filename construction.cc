@@ -1,11 +1,14 @@
-#include "construction.hh"
+#include "DetectorConstruction.hh"
 
-MyDetectorConstruction::MyDetectorConstruction()
+/*DetectorConstruction::DetectorConstruction()
 {}
 
-MyDetectorConstruction::~MyDetectorConstruction()
-{}
-G4VPhysicalVolume *MyDetectorConstruction::Construct()
+DetectorConstruction::~DetectorConstruction()
+{}*/
+
+DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction() {}
+DetectorConstruction::~DetectorConstruction() {}
+G4VPhysicalVolume *DetectorConstruction::Construct()
 {
    G4NistManager *nist = G4NistManager::Instance();
    
@@ -191,11 +194,11 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
   G4double half4X = 2 * cm;
   G4double half4Y = 2 * cm;
   G4double half4Z = 12 * cm;
-  auto solidShape4 = new G4Box("PWO", half4X, half4Y, half4Z);
+  auto solidShape4 = new G4Box("PWO4", half4X, half4Y, half4Z);
 
   auto logicShape4 = new G4LogicalVolume(solidShape4,  // its solid
     shape4_mat,                                        // its material
-    "PWO");                                         // its name
+    "PWO4");                                         // its name
     
       // Create visual attributes and set the color to Red
   G4VisAttributes* shape4visAttributes = new G4VisAttributes(G4Colour(1.0, 0.0, 0.0)); // Red color
@@ -206,7 +209,7 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
   new G4PVPlacement(nullptr,  // no rotation
     pos4,                     // at position
     logicShape4,              // its logical volume
-    "PWO",                 // its name
+    "PWO4",                 // its name
     logicEnv,                 // its mother  volume
     false,                    // no boolean operation
     0,                        // copy number
@@ -251,11 +254,11 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
 
   // Set all Shapes as scoring volume
   //
- /* G4Box *solidDetector = new G4Box("solidDetector", 0.005*cm, 0.005*cm, 1*cm);
+ // G4Box *solidDetector = new G4Box("solidDetector", 0.005*cm, 0.005*cm, 1*cm);
   
-  logicDetector = new G4LogicalVolume(solidDetector, world_mat, "logicDetector");
+  //ogicDetector = new G4LogicalVolume(solidDetector, world_mat, "logicDetector");
 
-  for(G4int i = 0; i < 10; i++)
+ /* for(G4int i = 0; i < 10; i++)
 
 {
      for(G4int j = 0; j < 10; j++)
@@ -264,27 +267,43 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
          G4ThreeVector(-2*cm+(i+0.5)*cm/10, -2*cm+(j+0.5)*cm/10, 58*cm),
           logicDetector, "physDetector", logicWorld, false, j+i*10, true);
      }
-}
+}*/
 
 
 
   //
-  //always return the physical World*/
+  //always return the physical World
   //
+
+
+  
   return physWorld;
 }
 
+ void DetectorConstruction::ConstructSDandField() {
+    G4SDManager* SDman = G4SDManager::GetSDMpointer();
+    
+    MySensitiveDetector* mySD = new MySensitiveDetector("MySD");
+    SDman->AddNewDetector(mySD);
 
-/*void MyDetectorConstruction::ConstructSDandField()
-   
-{ 
-   MySensitiveDetector *sensDet = new  
-   MySensitiveDetector("SensitiveDetector");
+    // Assign the sensitive detector to volumes
+    G4LogicalVolume* volume1 = logicShape1; // Get your logical volume 1
+    G4LogicalVolume* volume2 = logicShape2; // Get your logical volume 2
+    G4LogicalVolume* volume3 = logicShape3; // Get your logical volume 3
+    G4LogicalVolume* volume4 = logicShape4; // Get your logical volume 4
+    G4LogicalVolume* volume5 = logicShape5; // Get your logical volume 5
 
-logicDetector->SetSensitiveDetector(sensDet);
+    volume1->SetSensitiveDetector(mySD);
+    volume2->SetSensitiveDetector(mySD);
+    volume3->SetSensitiveDetector(mySD);
+    volume4->SetSensitiveDetector(mySD);
+    volume5->SetSensitiveDetector(mySD);
+}
+
+  
 
 
-}*/
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 

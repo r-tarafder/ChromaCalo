@@ -6,11 +6,12 @@
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 #include "G4UIterminal.hh"
-#include "construction.hh"
-#include "MySteppingAction.hh"
-#include "MyEventAction.hh"
+
+//#include "MySteppingAction.hh"
+//#include "MyEventAction.hh"
 #include "physics.hh"
 #include "action.hh"
+#include "DetectorConstruction.hh"
 
 
 int main(int argc, char** argv)
@@ -21,16 +22,16 @@ int main(int argc, char** argv)
     
     
     // Set up user initialization classes
-    runManager->SetUserInitialization(new MyDetectorConstruction());
+    runManager->SetUserInitialization(new DetectorConstruction());
     runManager->SetUserInitialization(new MyPhysicsList());
     
     
     
-    // Set user action classes
+    /* Set user action classes
     MySteppingAction* steppingAction = new MySteppingAction();
     runManager->SetUserAction(new MyPrimaryGenerator());
     runManager->SetUserAction(steppingAction);
-    runManager->SetUserAction(new MyEventAction(steppingAction));
+    runManager->SetUserAction(new MyEventAction(steppingAction));*/
     
     // Initialize Geant4 kernel
     runManager->Initialize();
