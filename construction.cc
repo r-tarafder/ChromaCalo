@@ -1,4 +1,4 @@
-#include "DetectorConstruction.hh"
+#include "construction.hh"
 
 /*DetectorConstruction::DetectorConstruction()
 {}
@@ -6,9 +6,9 @@
 DetectorConstruction::~DetectorConstruction()
 {}*/
 
-DetectorConstruction::DetectorConstruction() : G4VUserDetectorConstruction() {}
-DetectorConstruction::~DetectorConstruction() {}
-G4VPhysicalVolume *DetectorConstruction::Construct()
+MyDetectorConstruction::MyDetectorConstruction() : G4VUserDetectorConstruction() {}
+MyDetectorConstruction::~MyDetectorConstruction() {}
+G4VPhysicalVolume *MyDetectorConstruction::Construct()
 {
    G4NistManager *nist = G4NistManager::Instance();
    
@@ -96,7 +96,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   G4ThreeVector pos1 = G4ThreeVector(0, 0, 2*cm);
 
 
-  new G4PVPlacement(nullptr,  // no rotation
+ shape1pv = new G4PVPlacement(nullptr,  // no rotation
     pos1,                     // at position
     logicShape1,              // its logical volume
     "GAGG",                 // its name
@@ -106,8 +106,9 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     true);           // overlaps checking
 
   //
-  // Shape 2
+  //Shape 2
   //
+  
   
    G4Material *shape2_mat = new G4Material("PbWO4", 8.28*g/cm3, 3);
    shape2_mat->AddElement(nist->FindOrBuildElement("Pb"), 1);
@@ -134,7 +135,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   
    G4ThreeVector pos2 = G4ThreeVector(0, 0, 10*cm);
 
-  new G4PVPlacement(nullptr,  // no rotation
+ shape2pv = new G4PVPlacement(nullptr,  // no rotation
     pos2,                     // at position
     logicShape2,              // its logical volume
     "PWO",                 // its name
@@ -171,7 +172,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
                              
   G4ThreeVector pos3 = G4ThreeVector(0, 0, 19*cm);
 
-  new G4PVPlacement(nullptr,  // no rotation
+ shape3pv = new G4PVPlacement(nullptr,  // no rotation
     pos3,                     // at position
     logicShape3,              // its logical volume
     "BGO",                 // its name
@@ -206,7 +207,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
                                   
   G4ThreeVector pos4 = G4ThreeVector(0, 0, 34*cm);
 
-  new G4PVPlacement(nullptr,  // no rotation
+ shape4pv = new G4PVPlacement(nullptr,  // no rotation
     pos4,                     // at position
     logicShape4,              // its logical volume
     "PWO4",                 // its name
@@ -242,7 +243,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
                                   
   G4ThreeVector pos5 = G4ThreeVector(0, 0, 48*cm);
 
-  new G4PVPlacement(nullptr,  // no rotation
+ shape5pv = new G4PVPlacement(nullptr,  // no rotation
     pos5,                     // at position
     logicShape5,              // its logical volume
     "LYSO",                 // its name
@@ -280,28 +281,54 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
   return physWorld;
 }
 
- void DetectorConstruction::ConstructSDandField() {
-    G4SDManager* SDman = G4SDManager::GetSDMpointer();
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void DetectorConstruction::ConstructSDandField()
+{
+  // Create global magnetic field messenger.
+  // Uniform magnetic field is then created automatically if
+  // the field value is not zero.
+  G4ThreeVector fieldValue;
+  fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
+  fMagFieldMessenger->SetVerboseLevel(1);
+
+  // Register the field messenger for deleting
+  G4AutoDelete::Register(fMagFieldMessenger);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+}
+
+ //void MyDetectorConstruction::ConstructSDandField() {
+  //  G4SDManager *SDman = G4SDManager::GetSDMpointer();
     
-    MySensitiveDetector* mySD = new MySensitiveDetector("MySD");
-    SDman->AddNewDetector(mySD);
+   // MySensitiveDetector* mySD = new MySensitiveDetector("MySD");
+    //SDman->AddNewDetector(mySD);
 
     // Assign the sensitive detector to volumes
-    G4LogicalVolume* volume1 = logicShape1; // Get your logical volume 1
+   /* G4LogicalVolume* volume1 = logicShape1; // Get your logical volume 1
     G4LogicalVolume* volume2 = logicShape2; // Get your logical volume 2
     G4LogicalVolume* volume3 = logicShape3; // Get your logical volume 3
     G4LogicalVolume* volume4 = logicShape4; // Get your logical volume 4
-    G4LogicalVolume* volume5 = logicShape5; // Get your logical volume 5
+    G4LogicalVolume* volume5 = logicShape5; // Get your logical volume 5*/
 
-    volume1->SetSensitiveDetector(mySD);
+   /* volume1->SetSensitiveDetector(mySD);
     volume2->SetSensitiveDetector(mySD);
     volume3->SetSensitiveDetector(mySD);
     volume4->SetSensitiveDetector(mySD);
     volume5->SetSensitiveDetector(mySD);
+    
+    
+    logicShape1->SetSensitiveDetector(mySD);
+    logicShape2->SetSensitiveDetector(mySD);
+    logicShape3->SetSensitiveDetector(mySD);
+    logicShape4->SetSensitiveDetector(mySD);
+    logicShape5->SetSensitiveDetector(mySD);*/
 }
 
   
-
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

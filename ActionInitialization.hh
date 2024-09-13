@@ -1,17 +1,3 @@
-/*#ifndef ACTION_HH
-#define ACTION_HH
-#include "G4VUserActionInitialization.hh"
-#include "generator.hh"
-class MyActionInitialization : public G4VUserActionInitialization
-{
-public:
-MyActionInitialization();
- ~MyActionInitialization();
-virtual void Build() const;
-};
-#endif
-*/
-
 #ifndef ActionInitialization_HH
 #define ActionInitialization_HH
 
@@ -31,7 +17,7 @@ namespace upo
 class ActionInitialization : public G4VUserActionInitialization
 {
   public:
-    ActionInitialization(upo::DetectorConstruction*);
+    ActionInitialization(B4::DetectorConstruction*);
     ~ActionInitialization() override = default;
 
     void BuildForMaster() const override;
@@ -44,4 +30,5 @@ class ActionInitialization : public G4VUserActionInitialization
 }
 
 #endif
+
 
